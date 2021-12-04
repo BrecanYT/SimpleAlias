@@ -23,7 +23,7 @@ public class SimpleAlias extends JavaPlugin {
 		Bukkit.getConsoleSender().sendMessage(name + ChatColor.BLUE + " Plugin encendido (version: " + version + " )");
 		registrarCommandos();
 		registrarEventos();
-		registrarConfig();
+		registrarConfig();s
 	}
 	
 	public void onDisable()
