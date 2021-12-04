@@ -1,0 +1,13 @@
+main: rubrub07.simplealias.SimpleAlias
+version: 0.0.1
+author: rubrub07
+softdepend: [PlaceholderAPI]
+name: SimpleAlias
+commands:
+   sahelp:
+      description: Comando de ayuda de Simple Alias
+   sareload:
+      description: recarga el plugin
+permissions:
+   simplealias.*:
+   simplealias.reload:
