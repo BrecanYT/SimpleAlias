@@ -1,0 +1,25 @@
+config:
+    aliass:
+        1:
+           command: awa  #este es el comando que se asa para ejecutar el alias
+           usealias: true
+           alias: say awa #este es el comando a ejectuar
+           broadcast: false #si el mensaje es visible a todos los jugadores
+           console: false
+           sendmessagetoplayer: true
+           message:
+              - line1
+              - line2
+              - line3
+           permission: none #si es none no se usara pero si es cualquier otra cosa si
+        2:
+           command: killall
+           usealias: true
+           alias: kill @p
+           console: true #se ejecutara por consola
+           broadcast: false #si el mensaje es visible a todos los jugadores
+           sendmessagetoplayer: true
+           message:
+              - line1
+              - line2
+              - line3
