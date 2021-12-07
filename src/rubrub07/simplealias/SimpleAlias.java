@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import rubrub07.simplealias.commands.sahelp;
 import rubrub07.simplealias.commands.sareload;
 import rubrub07.simplealias.eventos.OnCommand;
+import rubrub07.simplealias.eventos.OnUse;
 
 public class SimpleAlias extends JavaPlugin {
 	PluginDescriptionFile pdffile = getDescription();
@@ -41,6 +42,7 @@ public class SimpleAlias extends JavaPlugin {
 	{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new OnCommand(this), this);
+		pm.registerEvents(new OnUse(this), this);
 	}
 	
 	public void registrarConfig()

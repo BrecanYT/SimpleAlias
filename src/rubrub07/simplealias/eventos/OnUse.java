@@ -3,43 +3,40 @@ package rubrub07.simplealias.eventos;
 import java.util.Objects;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.event.player.PlayerInteractEvent;
 
+import de.tr7zw.nbtapi.NBTItem;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatColor;
 import rubrub07.simplealias.SimpleAlias;
 
-public class OnCommand implements Listener{
-
+public class OnUse implements Listener{
 
     private SimpleAlias plugin;
 
-    public OnCommand(SimpleAlias plugin)
+    public OnUse(SimpleAlias plugin)
     {
         this.plugin = plugin;
     }
-
-    @EventHandler
-    public void command (PlayerCommandPreprocessEvent event)
+    
+    @SuppressWarnings("deprecation")
+	public void useitem(PlayerInteractEvent event)
     {
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
         Player jugador = event.getPlayer();
         FileConfiguration conf = plugin.getConfig();
-        String commandmessage = event.getMessage().toString().toLowerCase();
         ConfigurationSection sec = conf.getConfigurationSection("config.aliass.");
+		org.bukkit.inventory.ItemStack item = jugador.getItemInHand();
+		NBTItem nbt = new NBTItem(item);
 
         for(String key : sec.getKeys(false)){
-            String name = conf.getString("config.aliass." + key + ".command");
             if(Objects.equals(conf.getString("config.aliass." + key + ".permission"), "none"))
             { }
-            if(Objects.equals(conf.getString("config.aliass." + key + ".useitem"), "true"))
-            { return;}
             else
             {
                 if(jugador.hasPermission(conf.getString("config.aliass." + key + ".permission")))
@@ -50,10 +47,10 @@ public class OnCommand implements Listener{
                 }
             }
             String alias = conf.getString("config.aliass." + key + ".alias");
-            if(commandmessage.contentEquals("/" + name))
+           
+            if(ChatColor.translateAlternateColorCodes('&', nbt.getName()).equals(ChatColor.translateAlternateColorCodes('&', conf.getString("config.aliass." + key + ".itemname"))))
             {
-                event.setCancelled(true);
-                if(Objects.equals(conf.getString("config.aliass." + key + ".console"), "true"))
+            	if(Objects.equals(conf.getString("config.aliass." + key + ".console"), "true"))
                 {
                     if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
                         if(PlaceholderAPI.containsPlaceholders(alias))
@@ -62,6 +59,8 @@ public class OnCommand implements Listener{
                             if(Objects.equals(conf.getString("config.aliass." + key + ".usealias"), "true"))
                             {
                                 Bukkit.dispatchCommand(console, alias2);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }
 
 
@@ -70,13 +69,16 @@ public class OnCommand implements Listener{
 
                                 if(conf.getString("config.aliass." + key + ".sendmessagetoplayer") ==  "true")
                                 {
-
                                     jugador.sendMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
                                 }
                                 if(Objects.equals(conf.getString("config.aliass." + key + ".broadcast"), "true"))
                                 {
 
                                     Bukkit.broadcastMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
 
                                 }
                             }
@@ -87,6 +89,8 @@ public class OnCommand implements Listener{
                             if(conf.getString("config.aliass." + key + ".usealias") ==  "true")
                             {
                                 Bukkit.dispatchCommand(console, alias);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }
                             for (String line : conf.getStringList("config.aliass." + key + ".message"))
                             {
@@ -95,6 +99,8 @@ public class OnCommand implements Listener{
                                 {
 
                                     jugador.sendMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
 
 
                                 }
@@ -102,6 +108,8 @@ public class OnCommand implements Listener{
                                 {
 
                                     Bukkit.broadcastMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
 
                                 }
                             }
@@ -112,6 +120,8 @@ public class OnCommand implements Listener{
                         if(conf.getString("config.aliass." + key + ".usealias") ==  "true")
                         {
                             Bukkit.dispatchCommand(console, alias);
+                            if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                            	jugador.getItemInHand().setAmount(0);
                         }
                         for (String line : conf.getStringList("config.aliass." + key + ".message"))
                         {
@@ -120,12 +130,16 @@ public class OnCommand implements Listener{
                             {
 
                                 jugador.sendMessage(messagep);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
 
                             }
                             if(Objects.equals(conf.getString("config.aliass." + key + ".broadcast"), "true"))
                             {
 
                                 Bukkit.broadcastMessage(messagep);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
 
                             }
                         }}
@@ -140,6 +154,8 @@ public class OnCommand implements Listener{
                             if(Objects.equals(conf.getString("config.aliass." + key + ".usealias"), "true"))
                             {
                                 jugador.performCommand(alias3);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }
                             for (String line : conf.getStringList("config.aliass." + key + ".message"))
                             {
@@ -148,11 +164,15 @@ public class OnCommand implements Listener{
                                 {
 
                                     jugador.sendMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
                                 }
                                 if(Objects.equals(conf.getString("config.aliass." + key + ".broadcast"), "true"))
                                 {
 
                                     Bukkit.broadcastMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
                                 }}
                         }
                         else
@@ -160,6 +180,8 @@ public class OnCommand implements Listener{
                             if(Objects.equals(conf.getString("config.aliass." + key + ".usealias"), "true"))
                             {
                                 jugador.performCommand(alias);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }
                             for (String line : conf.getStringList("config.aliass." + key + ".message"))
                             {String messagep = ChatColor.translateAlternateColorCodes('&', PlaceholderAPI.setPlaceholders(jugador, line));
@@ -167,12 +189,16 @@ public class OnCommand implements Listener{
                                 {
 
                                     jugador.sendMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
 
                                 }
                                 if(Objects.equals(conf.getString("config.aliass." + key + ".broadcast"), "true"))
                                 {
 
                                     Bukkit.broadcastMessage(messagep);
+                                    if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                    	jugador.getItemInHand().setAmount(0);
 
                                 }
                             }
@@ -183,6 +209,8 @@ public class OnCommand implements Listener{
                         if(Objects.equals(conf.getString("config.aliass." + key + ".usealias"), "true"))
                         {
                             jugador.performCommand(alias);
+                            if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                            	jugador.getItemInHand().setAmount(0);
                         }
                         for (String line : conf.getStringList("config.aliass." + key + ".message"))
                         {
@@ -191,16 +219,24 @@ public class OnCommand implements Listener{
                             {
 
                                 jugador.sendMessage(messagep);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }
                             if(Objects.equals(conf.getString("config.aliass." + key + ".broadcast"), "true"))
                             {
 
                                 Bukkit.broadcastMessage(messagep);
+                                if(Objects.equals(conf.getString("config.aliass." + key + ".consume"), "true"))
+                                	jugador.getItemInHand().setAmount(0);
                             }}
                     }
                     break;
                 }
             }
+            else
+            {}
         }
+    	
     }
+	
 }
